@@ -9,14 +9,20 @@ const tracker:APIConfig = {
 
 app.use(middlewareLogResponses)
 app.use("/app",middlewareMetricsInc,express.static("./src/app"));
-app.get("/healthz", (req: Request, res: Response)=>{
+app.get("/api/healthz", (req: Request, res: Response)=>{
   res.set("Content-Type","text/plain; charset=utf-8");
   res.send("OK");
 });
-app.get("/metrics", (req: Request, res: Response)=>{
-  res.send(`Hits: ${tracker.fileserverHits}`)
+app.get("/admin/metrics", (req: Request, res: Response)=>{
+  res.set("Content-Type","text/html; charset=utf-8")
+  res.send(`<html>
+  <body>
+    <h1>Welcome, Chirpy Admin</h1>
+    <p>Chirpy has been visited ${tracker.fileserverHits} times!</p>
+  </body>
+</html>`)
 });
-app.get("/reset", (req,res) => {
+app.get("/admin/reset", (req,res) => {
   tracker.fileserverHits = 0
   res.end()
 });
