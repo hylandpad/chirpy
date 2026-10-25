@@ -1,0 +1,6 @@
+
+> chirpy@1.0.0 dev
+> npx tsc && node dist/index.js
+
+src/index.ts(12,33): error TS1005: '(' expected.
+src/index.ts(12,85): error TS1005: '=>' expected.
