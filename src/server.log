@@ -3,7 +3,32 @@
 > npx tsc && node dist/index.js
 
 Server is running at http://localhost:8080
+[NON-OK] GET / - Status: 304
+[NON-OK] GET /.well-known/appspecific/com.chrome.devtools.json - Status: 404
+[NON-OK] GET / - Status: 304
+[NON-OK] GET /.well-known/appspecific/com.chrome.devtools.json - Status: 404
+[NON-OK] GET / - Status: 304
+[NON-OK] GET /.well-known/appspecific/com.chrome.devtools.json - Status: 404
+[NON-OK] GET / - Status: 304
+[NON-OK] GET /.well-known/appspecific/com.chrome.devtools.json - Status: 404
+[NON-OK] GET / - Status: 304
+[NON-OK] GET /.well-known/appspecific/com.chrome.devtools.json - Status: 404
+[NON-OK] GET / - Status: 304
+[NON-OK] GET /.well-known/appspecific/com.chrome.devtools.json - Status: 404
+[NON-OK] GET / - Status: 304
+[NON-OK] GET /.well-known/appspecific/com.chrome.devtools.json - Status: 404
+[NON-OK] GET / - Status: 304
+[NON-OK] GET /.well-known/appspecific/com.chrome.devtools.json - Status: 404
+[NON-OK] GET /.well-known/appspecific/com.chrome.devtools.json - Status: 404
+[NON-OK] GET /admin/reset - Status: 404
+[NON-OK] GET /.well-known/appspecific/com.chrome.devtools.json - Status: 404
+[NON-OK] GET /.well-known/appspecific/com.chrome.devtools.json - Status: 404
+[NON-OK] GET /.well-known/appspecific/com.chrome.devtools.json - Status: 404
+[NON-OK] GET /.well-known/appspecific/com.chrome.devtools.json - Status: 404
+[NON-OK] GET /.well-known/appspecific/com.chrome.devtools.json - Status: 404
+[NON-OK] GET /.well-known/appspecific/com.chrome.devtools.json - Status: 404
+[NON-OK] GET /.well-known/appspecific/com.chrome.devtools.json - Status: 404
+[NON-OK] GET /admin/reset - Status: 404
 [NON-OK] GET / - Status: 301
-[NON-OK] GET / - Status: 301
-[NON-OK] GET / - Status: 301
+[NON-OK] GET /admin/reset - Status: 404
 [NON-OK] GET / - Status: 301

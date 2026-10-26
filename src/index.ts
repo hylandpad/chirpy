@@ -22,10 +22,38 @@ app.get("/admin/metrics", (req: Request, res: Response)=>{
   </body>
 </html>`)
 });
-app.get("/admin/reset", (req,res) => {
+app.post("/admin/reset", (req,res) => {
   tracker.fileserverHits = 0
   res.end()
 });
+
+app.post("/api/validate_chirp",(req,res)=>{
+  let body = ""
+
+  req.on("data", (chunk) => {
+    body += chunk
+  })
+
+  req.on("end", () => {  
+    try {
+      const parsedBody = JSON.parse(body);  
+      if(body.length > 140){
+        const responseBody = {
+          error:"Chirp is too long"
+        }
+        res.status(400).send(responseBody)
+      }else{
+        const responseBody = {
+          valid: true
+        }
+        res.status(200).send(responseBody)
+      }
+    } catch (error){
+      res.status(400).send("Something went wrong");
+    }
+  }
+  )
+})
 
 function middlewareMetricsInc(req: Request, res: Response, next: NextFunction) {
   tracker.fileserverHits++;
