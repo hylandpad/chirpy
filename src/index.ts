@@ -1,12 +1,14 @@
 import express, { type Express, type Request, type Response, type NextFunction } from 'express';
 import { type APIConfig } from './config.js'
 
+const badWords = ['kerfuffle','sharbert','fornax']
 const app = express();
 const PORT = 8080;
 const tracker:APIConfig = {
   fileserverHits: 0
 }
 
+app.use(express.json());
 app.use(middlewareLogResponses)
 app.use("/app",middlewareMetricsInc,express.static("./src/app"));
 app.get("/api/healthz", (req: Request, res: Response)=>{
@@ -28,32 +30,41 @@ app.post("/admin/reset", (req,res) => {
 });
 
 app.post("/api/validate_chirp",(req,res)=>{
-  let body = ""
+  type Parameters = {
+    body: string;
+  }  
+  
+  const params: Parameters = req.body
 
-  req.on("data", (chunk) => {
-    body += chunk
-  })
-
-  req.on("end", () => {  
-    try {
-      const parsedBody = JSON.parse(body);  
-      if(body.length > 140){
+  try {
+      if(params.body.length > 140){
         const responseBody = {
-          error:"Chirp is too long"
+          error: "Chirp is too long"
         }
         res.status(400).send(responseBody)
       }else{
+        const profanityFiltered = profanityFilter(params.body,badWords);
         const responseBody = {
-          valid: true
+          cleanedBody: profanityFiltered
         }
+
         res.status(200).send(responseBody)
       }
     } catch (error){
       res.status(400).send("Something went wrong");
     }
-  }
-  )
 })
+
+function profanityFilter(bodytext: string, badWords: string[]){
+  const splitted = bodytext.split(" ")
+  for (let i = 0; i <  splitted.length; i++){
+    if (badWords.includes(splitted[i].toLowerCase())){
+      splitted[i] = '****'
+    }
+  }
+  console.log(splitted.join(" "))
+  return splitted.join(" ");
+}
 
 function middlewareMetricsInc(req: Request, res: Response, next: NextFunction) {
   tracker.fileserverHits++;
