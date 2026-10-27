@@ -9,12 +9,16 @@ const tracker:APIConfig = {
 }
 
 app.use(express.json());
+
 app.use(middlewareLogResponses)
+
 app.use("/app",middlewareMetricsInc,express.static("./src/app"));
+
 app.get("/api/healthz", (req: Request, res: Response)=>{
   res.set("Content-Type","text/plain; charset=utf-8");
   res.send("OK");
 });
+
 app.get("/admin/metrics", (req: Request, res: Response)=>{
   res.set("Content-Type","text/html; charset=utf-8")
   res.send(`<html>
@@ -24,6 +28,7 @@ app.get("/admin/metrics", (req: Request, res: Response)=>{
   </body>
 </html>`)
 });
+
 app.post("/admin/reset", (req,res) => {
   tracker.fileserverHits = 0
   res.end()
@@ -35,24 +40,17 @@ app.post("/api/validate_chirp",(req,res)=>{
   }  
   
   const params: Parameters = req.body
-
-  try {
       if(params.body.length > 140){
-        const responseBody = {
-          error: "Chirp is too long"
-        }
-        res.status(400).send(responseBody)
+        throw new Error("Chirp is too long")
       }else{
         const profanityFiltered = profanityFilter(params.body,badWords);
         const responseBody = {
           cleanedBody: profanityFiltered
         }
-
         res.status(200).send(responseBody)
       }
-    } catch (error){
+
       res.status(400).send("Something went wrong");
-    }
 })
 
 function profanityFilter(bodytext: string, badWords: string[]){
@@ -62,7 +60,6 @@ function profanityFilter(bodytext: string, badWords: string[]){
       splitted[i] = '****'
     }
   }
-  console.log(splitted.join(" "))
   return splitted.join(" ");
 }
 
@@ -80,6 +77,20 @@ function middlewareLogResponses(req: Request, res: Response, next: NextFunction)
   })
   next();
 }
+
+async function errorHandler(
+  err: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  console.log(err);
+  res.status(500).json({
+    error: "Something went wrong on our end",
+  });
+}
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
