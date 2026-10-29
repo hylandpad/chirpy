@@ -1,5 +1,6 @@
 import express, { type Express, type Request, type Response, type NextFunction } from 'express';
 import { type APIConfig } from './config.js'
+import { NotFoundError,MalformedError,UnauthorizedError,ForbiddenError } from './api/errors.js'
 
 const badWords = ['kerfuffle','sharbert','fornax']
 const app = express();
@@ -41,7 +42,7 @@ app.post("/api/validate_chirp",(req,res)=>{
   
   const params: Parameters = req.body
       if(params.body.length > 140){
-        throw new Error("Chirp is too long")
+        throw new MalformedError("Chirp is too long. Max length is 140")
       }else{
         const profanityFiltered = profanityFilter(params.body,badWords);
         const responseBody = {
@@ -49,8 +50,6 @@ app.post("/api/validate_chirp",(req,res)=>{
         }
         res.status(200).send(responseBody)
       }
-
-      res.status(400).send("Something went wrong");
 })
 
 function profanityFilter(bodytext: string, badWords: string[]){
@@ -78,19 +77,27 @@ function middlewareLogResponses(req: Request, res: Response, next: NextFunction)
   next();
 }
 
-async function errorHandler(
+async function errorMiddleware(
   err: Error,
   req: Request,
   res: Response,
   next: NextFunction,
 ) {
   console.log(err);
-  res.status(500).json({
-    error: "Something went wrong on our end",
-  });
+  if (err instanceof NotFoundError) {
+    res.status(404).json({error: err.message});
+  } else if (err instanceof MalformedError) {
+    res.status(400).json({error: err.message});
+  } else if (err instanceof UnauthorizedError) {
+    res.status(401).json({error: err.message});
+  } else if (err instanceof ForbiddenError) {
+    res.status(403).json({error: err.message});
+  } else {
+    res.status(500).json({error: "Something went wrong on our end"});
+  }
 }
 
-app.use(errorHandler);
+app.use(errorMiddleware);
 
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
