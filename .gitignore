@@ -1,4 +1,4 @@
 node_modules/
 dist/
-server.log
+.env
 src/server.log

@@ -6,7 +6,9 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node dist/index.js",
-    "dev": "npx tsc && node dist/index.js"
+    "dev": "npx tsc && node dist/index.js",
+    "generate": "drizzle-kit generate",
+    "migrate": "drizzle-kit migrate"
   },
   "repository": {
     "type": "git",
@@ -26,6 +28,9 @@
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "express": "^5.3.0"
+    "drizzle-kit": "^0.31.11",
+    "drizzle-orm": "^0.45.4",
+    "express": "^5.3.0",
+    "postgres": "^4.0.0"
   }
 }

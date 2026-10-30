@@ -6,7 +6,8 @@ const badWords = ['kerfuffle','sharbert','fornax']
 const app = express();
 const PORT = 8080;
 const tracker:APIConfig = {
-  fileserverHits: 0
+  fileServerHits: 0,
+  dbURL: process.env.DB_URL || ""
 }
 
 app.use(express.json());
@@ -25,13 +26,13 @@ app.get("/admin/metrics", (req: Request, res: Response)=>{
   res.send(`<html>
   <body>
     <h1>Welcome, Chirpy Admin</h1>
-    <p>Chirpy has been visited ${tracker.fileserverHits} times!</p>
+    <p>Chirpy has been visited ${tracker.fileServerHits} times!</p>
   </body>
 </html>`)
 });
 
 app.post("/admin/reset", (req,res) => {
-  tracker.fileserverHits = 0
+  tracker.fileServerHits = 0
   res.end()
 });
 
@@ -63,7 +64,7 @@ function profanityFilter(bodytext: string, badWords: string[]){
 }
 
 function middlewareMetricsInc(req: Request, res: Response, next: NextFunction) {
-  tracker.fileserverHits++;
+  tracker.fileServerHits++;
   next();
 }
 
